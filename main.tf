@@ -19,3 +19,52 @@ name="dev-vpc"
 }
 
 }
+
+resource "aws_subnet" ""{
+
+tags={
+name="dev-vpc"
+}
+}
+ resource "aws_internetgateway" "" {
+
+tags={
+name="dev-vpc"
+}
+ }
+
+resource "aws_routetable" ""{
+
+tags={
+name="dev-vpc"
+}
+}
+
+resource "aws_route" "" {
+
+tags={
+name="dev-vpc"
+}
+}
+
+resource "aws_routetable_associated" "" {
+
+tags={
+name="dev-vpc"
+}
+}
+
+resource "aws_security_group" "" {
+
+tags={
+name="dev-vpc"
+}
+}
+
+
+
+
+
+
+
+
