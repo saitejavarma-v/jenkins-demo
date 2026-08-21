@@ -10,3 +10,10 @@ resource "aws_instance" "demo" {
     Name = "demo-ec2"
   }
 }
+resource "vpc" "publicvpc"{
+vpc="aws_instance-demo.id"
+tags={
+name="dev-vpc"
+}
+
+}
