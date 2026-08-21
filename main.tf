@@ -42,14 +42,14 @@ name="dev-vpc3"
 
 resource "aws_route_table" "public_route_table"{
 vpc_id=aws_vpc.publicvpc.id
-gateway_id=aws_internetgateway.public_igw.id
+gateway_id=aws_internet_gateway.public_igw.id
 tags={
 name="dev-vpc4"
 }
 }
 
 resource "aws_route" "connect_igw_and_route_table" {
-route_table_id=aws_routetable.public_routetable.id
+route_table_id=aws_route_table.public_route_table.id
 
 
 }
