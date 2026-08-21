@@ -90,6 +90,7 @@ resource "aws_security_group" "public_sg" {
   tags = {
     Name = "dev-vpc7"
 }
+}
 
 
 
