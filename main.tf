@@ -10,8 +10,9 @@ resource "aws_instance" "demo" {
     Name = "demo-ec2"
   }
 }
-resource "vpc" "publicvpc"{
-vpc="aws_instance-demo.id"
+
+resource "aws_vpc" "publicvpc"{
+cidr="10.0.0.0 /16"
 tags={
 name="dev-vpc"
 }
