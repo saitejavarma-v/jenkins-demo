@@ -2,70 +2,84 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_instance" "demo" {
-  ami           = "ami-0ad21ae1d0696ad58"
-  instance_type = "t2.micro"
-   subnet_id = aws_subnet.public_subnet.id
-  vpc_security_group_ids = [aws_security_group.public_sg.id]
-
+resource "aws_vpc" "publicvpc" {
+  cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "demo-ec2"
+    Name = "dev-vpc1"
   }
 }
 
-resource "aws_vpc" "publicvpc"{
-cidr_block ="10.0.0.0/16" 
-
-tags={
-name="dev-vpc1"
-}
-
-}
-
-resource "aws_subnet" "public_subnet"{
-vpc_id=aws_vpc.publicvpc.id
-  region = "ap-south-1"
-cidr_block ="10.0.0.0/16" 
-
-tags={
-name="dev-vpc2"
-}
-}
- resource "aws_internet_gateway" "public_igw" {
-vpc_id=aws_vpc.publicvpc.id
-
-tags={
-name="dev-vpc3"
-}
- }
-
-resource "aws_route_table" "public_route_table"{
-vpc_id=aws_vpc.publicvpc.id
-gateway_id=aws_internet_gateway.public_igw.id
-tags={
-name="dev-vpc4"
-}
-}
-
-resource "aws_route" "connect_igw_and_route_table" {
-route_table_id=aws_route_table.public_route_table.id
-
-
-}
-
-resource "aws_route_table_association" "routetable_with_subnet" {
-route_table_id=aws_route_table.public_route_table.id
-subnet_id= aws_subnet.public_subnet.id
-tags={
-name="dev-vpc6"
-}
-}
-
-resource "aws_security_group" "public_sg" {
-  name   = "public-sg"
+resource "aws_subnet" "public_subnet" {
   vpc_id = aws_vpc.publicvpc.id
 
+  # 🔴 CHANGE
+  cidr_block = "10.0.1.0/24"
+
+  # 🔴 ADD
+  availability_zone = "ap-south-1a"
+
+  # 🔴 ADD
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "dev-vpc2"
+  }
+}
+
+
+# 🔴 CHANGE resource name
+resource "aws_internet_gateway" "public_igw" {
+  vpc_id = aws_vpc.publicvpc.id
+
+  tags = {
+    Name = "dev-vpc3"
+  }
+}
+
+
+# 🔴 CHANGE resource name
+resource "aws_route_table" "public_routetable" {
+  vpc_id = aws_vpc.publicvpc.id
+
+  tags = {
+    Name = "dev-vpc4"
+  }
+}
+
+
+resource "aws_route" "connect_igw_and_routetable" {
+
+  # 🔴 CHANGE reference
+  route_table_id = aws_route_table.public_routetable.id
+
+  # 🔴 ADD
+  destination_cidr_block = "0.0.0.0/0"
+
+  # 🔴 ADD
+  gateway_id = aws_internet_gateway.public_igw.id
+}
+
+
+# 🔴 CHANGE resource name
+resource "aws_route_table_association" "routetable_with_subnet" {
+
+  # 🔴 CHANGE reference
+  route_table_id = aws_route_table.public_routetable.id
+
+  subnet_id = aws_subnet.public_subnet.id
+}
+
+
+resource "aws_security_group" "public_sg" {
+
+  # 🔴 ADD
+  name = "public-sg"
+
+  # 🔴 ADD
+  vpc_id = aws_vpc.publicvpc.id
+
+  # 🔴 ADD
   ingress {
     from_port   = 22
     to_port     = 22
@@ -73,6 +87,7 @@ resource "aws_security_group" "public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # 🔴 ADD
   ingress {
     from_port   = 80
     to_port     = 80
@@ -80,6 +95,7 @@ resource "aws_security_group" "public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # 🔴 ADD
   egress {
     from_port   = 0
     to_port     = 0
@@ -89,13 +105,21 @@ resource "aws_security_group" "public_sg" {
 
   tags = {
     Name = "dev-vpc7"
+  }
 }
+
+
+resource "aws_instance" "demo" {
+  ami           = "ami-0ad21ae1d0696ad58"
+  instance_type = "t2.micro"
+
+  # 🔴 ADD — puts EC2 inside your subnet
+  subnet_id = aws_subnet.public_subnet.id
+
+  # 🔴 ADD — attaches your SG to EC2
+  vpc_security_group_ids = [aws_security_group.public_sg.id]
+
+  tags = {
+    Name = "demo-ec2"
+  }
 }
-
-
-
-
-
-
-
-
