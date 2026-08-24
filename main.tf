@@ -44,7 +44,7 @@ resource "aws_route_table" "public_routetable" {
   }
 }
 
-variable "subnet_prefix"{
+variable "subnet_prefix" {
 description="jst passing the values"
 type="string"
 }
