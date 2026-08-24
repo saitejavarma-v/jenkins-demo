@@ -11,7 +11,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id = aws_vpc.publicvpc.id
 
   # 🔴 CHANGE
-  cidr_block = "10.0.1.0/24"
+  cidr_block = var.subnet.prefix
 
   # 🔴 ADD
   availability_zone = "ap-south-1a"
